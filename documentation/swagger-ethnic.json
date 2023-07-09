@@ -1,0 +1,448 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Popular delicacies and ethnic groups In Nigeria",
+        "title": "REST API",
+        "version": "2.0"
+    },
+
+    "basePath": "https://string-wkh7.onrender.com/",
+    "schemes": [
+        "http", 
+        "https" ],
+
+    "servers": [
+
+        {
+            "url": "http://localhost:6060", 
+            "description": "local development"
+        },
+
+        {
+            "url": "https://render.com/rest", 
+            "description": "Production development"
+        }
+        
+    
+    ], 
+
+    "tags":[ {
+    
+            "name": "Ethnic",
+            "description": "List of Ethnic Groups In Nigeria"
+    
+        },
+        
+        {
+            "name": "Delicacies",
+            "description": "Delicacies in Nigeria"
+        }
+    ],
+    
+
+    "paths": {
+        "/ethnics":{
+           "get": {
+
+            "tags": [ "Ethnic"],
+
+            "description": "Ethnic groups in Nigeria",
+
+            "responses": {
+                "200": {
+                    
+                        "description":"OK",
+
+                        "content":{
+
+                            "application/json": {
+
+                           
+                            "schema":{
+                                "type": "object",
+                                
+                                "example":{
+                                    "name": {"example":"any"}
+                                }
+                            }
+                           
+                            }
+                        }
+                    },
+                "404": {"description":"NOT FOUND"}
+            },
+            
+            "parameters": []
+
+           }
+            
+        },
+    
+
+    "/ethnic/{id}": {
+        "get":{
+            "tags": [ "Ethnic"],
+            "description": "Fetches a specific ethnic and delicacies",
+            "responses": {
+                "200":{"description":"OK"},
+                "404":{"description":"NOT FOUND"}
+            },
+
+            "produces": [
+                "application/json"
+            ],
+
+            "parameters":[
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": "true",
+                    "type": "string"
+                }
+            ],
+            "responses": {
+
+                "200": {
+                    "description": "OK"},
+
+                "404": {
+                    "description": "NOT FOUND"},
+
+                "500": {
+                    "description": "Internal error"
+                }
+            }
+        }
+    },
+
+
+    "/ethnic-post/": {
+        "post": {
+            "tags": [ "Ethnic"],
+            
+            "Description": "Registers ethnic group",
+
+            "responses": {
+                "202": { "descriptions":"Successful" },
+                "500": { "description": "Internal error"}
+            },
+
+            "produces":[ "application/json" ],
+
+            "parameters": [
+                {
+                    "name": "id",
+                    "in":"body",
+                    
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            
+                            "Ethnic": { "example": "any" },
+                            "Tribe": {"example": "any" },
+
+                            "States":{ "example": [] },
+                            "Country": { "example": "any" },
+
+                            "Languages": { "example":  []}, 
+                            "Region": { "example": "any" },
+                            
+
+                            "Delicacies": { "name": [] },
+                            "Image": { "example": "Yes / No"}
+                            
+                        }
+                    }
+
+                }
+            ]
+        }
+
+    },
+
+    "/ethnic-post/{id}": {
+        "post": {
+            "tags": [ "Ethnic"],
+            "Description": "Registers ethnic ",
+
+            "responses": {
+                "202": { "descriptions":"Successful" },
+                "500": { "description": "Internal error"}
+            },
+
+            "produces":[ "application/json" ],
+
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+
+                {
+                    "name": "id",
+                    "in":"body",
+                    
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+
+                            "Ethnic": { "example": "any"},
+                            "Tribes": { "example": []},
+
+                            "Country": { "example": "any" },
+                            "States": { "example": []},
+                            
+
+                            "Region": { "example": "any" },
+                            "Language": { "example": "any" }, 
+
+                            "Delicacies": { "example": [] },
+                            "Image": { "example": "Yes / No"}
+                            
+                        }
+                    }
+
+                }
+            ]
+        }
+
+    },
+
+
+
+
+    "/ethnic-put/{id}": {
+        "put": {
+            "tags": [ "Ethnic"],
+
+            "description": "Updates information",
+
+            "responsese": {
+                "200": { "description": "Updated" },
+                "401": { "description": "Bad request" },
+                "402": { "description": "Unauthorized" },
+                "403": { "description":"Forbidden" },
+                "500": { "description": "Internal error"}
+            },
+
+            "produces":[ "application/json" ],
+
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+
+                {
+                    "name": "body",
+                    "in": "body",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            
+                            "Ethnic": { "example": "any"},
+                            "Tribes": {"example": []},
+
+                            "States": {"example": []},
+                            "Country": { "example": "any" },
+
+                            "Region": { "example": "any" },
+                            "Language": { "example": "any" }, 
+
+                            "Delicacies": { "name": [] },
+                            "Image": { "example": "Yes / No"}
+                            
+                        }
+                    }
+                }
+            ]
+
+            
+        }
+
+    }, 
+
+
+    "/ethnic-del/{id}": {
+        "delete": {
+            "tags": [ "Ethnic"],
+
+            "description": "Deletes specific ethnic group",
+
+            "responses": {
+                "200":{ "description":"Deleted" }, 
+                "500": { "description":"NOT FOUND" },
+                "403": { "description": "Forbidden" },
+                "401": { "description": "Unauthorized" }
+            },
+
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type":"string"
+                }
+            ]
+            
+        }
+    },
+
+
+
+
+
+
+    "/delicacies": {
+        "get": {
+            "tags": ["Delicacies"],
+
+            "responses":{
+                "200": {
+                    "description": "OK",
+
+                    "content":{
+
+                        "application/json":{
+                            "schema": {
+                                "type": "object",
+                                "example":{
+                                    "name": "james"
+                                }
+                            }
+                        }
+                    }
+                },
+
+                "400": {
+                    "description":"Bad request"
+                }
+    
+            },
+
+            "parameters": []
+            
+        }
+    },
+
+
+    "/delicacy/{id}": {
+        "get": {
+            "tags": [ "Delicacies"],
+            "description": "Fetches a specific delicacy",
+           
+            "produces": [
+                "application/json"
+            ],
+
+            "parameters":[
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+
+            "responses": {
+
+                "200": {
+                    "description": "OK"},
+
+                "404": {
+                    "description": "NOT FOUND"},
+
+                "500": {
+                    "description": "Internal error"
+                }
+            }
+        }
+       
+    },
+
+    "/delicacy/{id}": {
+        "get": {
+            "tags":["Delicacies"],
+            "parameters":[],
+            "responses":{
+                "200": {
+                    "description": "OK",
+                    "content" :{
+                        "application/json": {
+                            "schema":{
+                                "type": "object",
+                                "example": {
+                                    "name": "pete"
+                                }
+
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description":"Bad request"
+                }
+            }
+        }
+    },
+
+    "/delicacy-post": {
+        "post": {
+            "tags":["Delicacies"],
+            
+            "produces":[ "application/json" ],
+            
+            "parameters":[
+                {
+                    "name": "body",
+                    "in": "body",
+                    
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "Name": { "example": "any" },
+                            "Ethnic":{ "example": "any"},
+                            "Tribe": { "example": "any"},
+                            "Ingredients": {"example":"any"},
+                            "Method":{"example":"any"}
+                        }
+                    }
+                }
+                
+            ],
+
+            "responses":{
+                "200": { "description": "OK"},
+                "500": { "description": "Internal error"}
+            }
+        }
+    },
+
+    
+
+    "/delicacy-del/{id}": {
+        "delete":{
+            "tags":["Delicacies"],
+            "responses": {
+                "200":{"description":"OK"},
+                "400": {"description":"Bad request"},
+                "500": {"description": "Internal error"}
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+
+        }
+    }
+
+}
+}
