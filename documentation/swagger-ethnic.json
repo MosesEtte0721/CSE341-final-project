@@ -267,7 +267,7 @@
     }, 
 
 
-    "/ethnic-del/{id}": {
+    "/ethnic/{id}": {
         "delete": {
             "tags": [ "Ethnic"],
 
@@ -404,11 +404,11 @@
                     "schema": {
                         "type": "object",
                         "properties": {
-                            "Name": { "example": "any" },
-                            "Ethnic":{ "example": "any"},
-                            "Tribe": { "example": "any"},
-                            "Ingredients": {"example":"any"},
-                            "Method":{"example":"any"}
+                            "name": { "example": "any" },
+                            "ethnic":{ "example": "any"},
+                            "tribe": { "example": "any"},
+                            "ingredients": {"example":"any"},
+                            "method":{"example":"any"}
                         }
                     }
                 }

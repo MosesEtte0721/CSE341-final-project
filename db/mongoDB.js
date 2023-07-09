@@ -17,7 +17,7 @@ const mongoDb = async () => {
       console.log("connected to the database as it should");
     }
   } catch (error) {
-    console.error({ error: "error occured" });
+    console.error({ error: "error occurred" });
   } finally {
     return mongoClient;
   }

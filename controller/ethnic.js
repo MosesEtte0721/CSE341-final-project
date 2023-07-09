@@ -1,6 +1,6 @@
 // imports database connection
-const mongodb = require("../db/mongoDB");
-const objectId = require("../db/mongoDB").ObjectId;
+const mongodb = require("../db/mongoDB").mongoDb();
+const objectId = require("mongodb").ObjectId;
 
 // Returns all the documents in the collection
 const ethnics = async (req, res) => {
@@ -119,11 +119,11 @@ const ethnicPutId = async (req, res, next) => {
     // extracts _id from the collection
     const objId = new objectId(req.params.id);
     // connects to the database
-    const mongoDB = await mongdb;
-    const collection = mongoDB.db("final-project").collection("ethnic-collection");
+    const mongoDB = await mongodb;
+    const collection = await mongoDB.db("final-project").collection("ethnic-collection");
 
     try {
-        collection.replaceOne({_id:objId, parameters});
+        collection.replaceOne({_id:objId}, parameters);
 
         if(collection.modifiedCounted > 0) {
             res.status(202).send("successful")
