@@ -7,7 +7,7 @@ const delicacies = async (req, res) => {
 
         const collection = mongoDB.db("final-project").collection("delicacy-collection");
         collection.find({}).toArray().then((x) => {
-        res.setHeaders("Content-Type", "application/json");
+        
         if(mongoDB) {
             res.status(200).json(x)
         } else {
@@ -24,13 +24,14 @@ const delicacies = async (req, res) => {
 const delicacySingle = async (req, res) => {
     const mongoDB = await mongodb;
     const objId = new objectId(req.params.id)
-
+    
     try {
-
+        
         const collection = mongoDB.db("final-project").collection("delicacy-collection");
-        collection.find({_id: objId}).toArray().then((x) => {
-        res.setHeaders("Content-Type", "application/json");
-        if(mongoDB) {
+        collection.find({ _id: objId}).toArray().then((x) => {
+
+        if(collection) {
+
             res.status(200).json(x)
         } else {
             res.status(401).send("Bad request")
@@ -57,6 +58,7 @@ const delicacyPost = async (req, res) => {
     try {
         const collection = mongoDB.db("final-project").collection("delicacy-collection");
         collection.insertOne(parameters);
+
         if(collection.acknowledged) {
             res.status(202).send("successful")
         } 
@@ -81,13 +83,15 @@ const delicacyPut = async (req, res) => {
 
     const objId = new objectId(req.params.id)
     const mongoDB = await mongodb;
+    const collection = mongoDB.db("final-project").collection("delicacy-collection");
 
     try {
-        const collection = await mongoDB.db("final-project").collection("delicacy-collection");
+       
 
         collection.replaceOne({ _id: objId}, parameters);
 
-        if(collection.modifyCounted > 0) {
+        if(collection.acknowledged) {
+            // console.log("Delicacy updated")
             res.status(202).send("successful")
         } 
         else {

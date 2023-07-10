@@ -1,4 +1,5 @@
-const express = require("express").Router;
+const express = require("express");
+const router = express.Router()
 const swaggerUi = require("swagger-ui-express");
 
 
@@ -6,5 +7,12 @@ const swaggerUi = require("swagger-ui-express");
 
 
 
-router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(require("./documentation/swagger-ethnic.json")));
+
+router.use("/", require("./swagger-rout"));
+
+
+router.use("/", require("./delicacy-rout"))
+router.use("/", require("./ethnic-rout"));
+
+module.exports = router
 

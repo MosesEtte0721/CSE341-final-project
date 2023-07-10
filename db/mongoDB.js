@@ -2,7 +2,7 @@ const { MongoClient } = require("mongodb");
 const env = require("dotenv").config();
 
 // mongoDb connection string
-const envVar = process.env.MONGODB_URI;
+const envVar =  process.env.MONGODB_URI;
 
 /* creates instances of MongoClient constructor
    and takes the connection string as an argument

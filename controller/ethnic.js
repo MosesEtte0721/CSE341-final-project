@@ -5,12 +5,13 @@ const objectId = require("mongodb").ObjectId;
 // Returns all the documents in the collection
 const ethnics = async (req, res) => {
     const mongoDB = await mongodb;
-    const collection = mongoDB.db("final-Project").collection("ethnic-collection");
+    const collection = mongoDB.db("final-project").collection("ethnic-collection");
     try {
-        const query = collection.find({}).toArray()
-        .then((x) => {
-        res.setHeader("Content-Type", "application/json");
+     // query the collection
+         collection.find({}).toArray().then((x) => {
+            res.setHeader("Content-Type", "application/json");
         if(mongoDB) {
+            console.log("This works")
             res.status(200).json(x)
         } else {
             res.status(404).json({message: "NOT FOUND"})
@@ -48,24 +49,25 @@ const ethnicSingle = async (req, res) => {
 
 const ethnicPost = async (req, res) => {
     const parameters = {
-        name: req.body.ethnic,
-        tribe: req.body.tribe,
+        ethnic: req.body.ethnic,
         state: req.body.state,
         country: req.body.country,
         region: req.body.region,
         language: req.body.language,
         image: req.body.image,
         delicacies: req.body.delicacies
-    }
+    };
 
     const mongoDB = await mongodb;
     const collection =  mongoDB.db("final-project").collection("ethnic-collection");
     try {
         collection.insertOne(parameters);
-        res.setHeader("Content-Type", "application/json")
-        if(data.acknowledged) {
-            res.status(201).send(`Document was inserted with _id ${data.insertedId}`)
-        } else {
+
+        res.setHeader("Content-Type", "application/json");
+        if(collection) {
+            res.status(201).send(`Document was inserted with _id ${collection.insertedId}`)
+        } 
+        else {
             res.status(404).send("NOT FOUND")
         }
 
@@ -107,8 +109,7 @@ const ethnicPostId = async (req, res) => {
 const ethnicPutId = async (req, res, next) => {
     // parameters 
     const parameters = {
-        name: req.body.ethnic,
-        tribe: req.body.tribe,
+        ethnic: req.body.ethnic,
         state: req.body.state,
         country: req.body.country,
         region: req.body.region,
@@ -123,10 +124,11 @@ const ethnicPutId = async (req, res, next) => {
     const collection = await mongoDB.db("final-project").collection("ethnic-collection");
 
     try {
-        collection.replaceOne({_id:objId}, parameters);
+        collection.replaceOne({_id: objId}, parameters);
 
-        if(collection.modifiedCounted > 0) {
-            res.status(202).send("successful")
+        if(collection) {
+           
+            res.status(202).send("Updated! successfully updated the document")
         } else {
             res.status(401).send("<h2>Not allowed</h2>")
         }
@@ -142,8 +144,8 @@ const ethnicDel = async (req, res, next) => {
     const collection = mongoDB.db("final-project").collection("ethnic-collection");
     collection.deleteOne({ _id: objId}, true)
     try {
-        if(collection.deletedCount > 0) {
-            res.status(200).send(`<h2>deleted</h2>`)
+        if(collection) {
+            res.status(200).send("Deleted! Document has been deleted permanently")
         } else {
             res.status(403).send("<h2>Not Deleted</h2>")
         }

@@ -21,14 +21,16 @@ app.use(cookieParser());
 app.use(express.json());
 // allows the application to read static files (html, css, js)
 app.use("/public", express.static("public"));
-const port = 6060;
+const port = process.env.PORT || 6060;
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(require("./documentation/swagger-ethnic.json")));
-
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(require("./documentation/swagger-ethnic.json")));
+app.use(require("./routes/index"));
 
 app.get("/", (req, res)=> {
     res.send("<h1>Welcome to my home page</h1>")
 });
+
+
 
 app.listen(port, (req, res)=> {
     console.log(`Server running on: ${port}`)
