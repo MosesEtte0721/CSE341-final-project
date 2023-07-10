@@ -47,8 +47,8 @@ const delicacySingle = async (req, res) => {
 const delicacyPost = async (req, res) => {
     const parameters = {
         name: req.body.name,
-        ethnic: req.body.ethnic,
-        tribe: req.body.tribe,
+        ethnics: req.body.ethnics,
+        states: req.body.states,
         ingredients: req.body.ingredients,
         method: req.body.method
 
@@ -59,7 +59,7 @@ const delicacyPost = async (req, res) => {
         const collection = mongoDB.db("final-project").collection("delicacy-collection");
         collection.insertOne(parameters);
 
-        if(collection.acknowledged) {
+        if(collection) {
             res.status(202).send("successful")
         } 
         else {
@@ -74,29 +74,25 @@ const delicacyPost = async (req, res) => {
 const delicacyPut = async (req, res) => {
     const parameters = {
         name: req.body.name,
-        ethnic: req.body.ethnic,
-        tribe: req.body.tribe,
+        ethnics: req.body.ethnics,
         ingredients: req.body.ingredients,
-        method: req.body.method
+        method: req.body.method,
+        states: req.body.states
 
     }
 
     const objId = new objectId(req.params.id)
     const mongoDB = await mongodb;
-    const collection = mongoDB.db("final-project").collection("delicacy-collection");
+    const collection = await mongoDB.db("final-project").collection("delicacy-collection");
 
     try {
-       
+       collection.replaceOne({ _id: objId}, parameters);
+       if(collection){
+        res.status(200).send("Updated!")
+       } else {
+        res.status(403).send("Failed! Operation Failed")
+       }
 
-        collection.replaceOne({ _id: objId}, parameters);
-
-        if(collection.acknowledged) {
-            // console.log("Delicacy updated")
-            res.status(202).send("successful")
-        } 
-        else {
-            res.status(401).send("Failed! Document not updated")
-        }
 
     } 
     catch(error) {
@@ -104,27 +100,26 @@ const delicacyPut = async (req, res) => {
     }
 };
 
-const delicacyDel = async(req, res) => {
+const delicacyDel = async (req, res) => {
     const objId = new objectId(req.params.id);
+    console.log(objId)
     const mongoDB = await mongodb;
-
-    try{
-
-        const collection = mongoDB.db("final-project").collection("delicacy-collection");
-        collection.deleteOne({_id: objId}, true);
-
-        if(collection.deletedCount > 0) {
-            res.status(200).send("Deleted! Document is permanently deleted");
-        } 
-        else {
-            res.status(401).send("Failed! Document was not deleted")
+    const collection = mongoDB.db("final-project").collection("delicacy-collection");
+    try {
+        // deletes document that the provided _id
+        collection.deleteOne({ _id: objId}, true);
+        if(collection) {
+            res.status(200).send("Deleted! Document has been deleted permanently")
         }
+        else {
+            res.status(403).send("<h2>Not Deleted</h2>")
+        }
+        
 
     }
     catch(error) {
         res.status(500).json({message: error.message})
     }
-    
 
 };
 

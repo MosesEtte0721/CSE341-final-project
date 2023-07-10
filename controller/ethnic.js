@@ -144,7 +144,7 @@ const ethnicDel = async (req, res, next) => {
     const collection = mongoDB.db("final-project").collection("ethnic-collection");
     collection.deleteOne({ _id: objId}, true)
     try {
-        if(collection) {
+        if(collection.acknowledged) {
             res.status(200).send("Deleted! Document has been deleted permanently")
         } else {
             res.status(403).send("<h2>Not Deleted</h2>")
