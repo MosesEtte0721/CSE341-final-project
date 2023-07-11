@@ -1,7 +1,8 @@
 // imports database connection
 const mongodb = require("../db/mongoDB").mongoDb();
 const objectId = require("mongodb").ObjectId;
-
+const { error } = require("console");
+const { validationResult}  = require("express-validator")
 // Returns all the documents in the collection
 const ethnics = async (req, res) => {
     const mongoDB = await mongodb;
@@ -50,12 +51,18 @@ const ethnicSingle = async (req, res) => {
 const ethnicPost = async (req, res) => {
     const parameters = {
         ethnic: req.body.ethnic,
-        state: req.body.state,
+        states: req.body.states,
         country: req.body.country,
         region: req.body.region,
         language: req.body.language,
         image: req.body.image,
         delicacies: req.body.delicacies
+    };
+    
+    const validateData = validationResult(req);
+
+    if(validateData.errors.length > 0) {
+        res.status(401).send(validateData.errors.message)
     };
 
     const mongoDB = await mongodb;
@@ -64,8 +71,9 @@ const ethnicPost = async (req, res) => {
         collection.insertOne(parameters);
 
         res.setHeader("Content-Type", "application/json");
-        if(collection) {
-            res.status(201).send(`Document was inserted with _id ${collection.insertedId}`)
+
+        if(collection.acknowledged) {
+            res.status(201).send(`Document was inserted`)
         } 
         else {
             res.status(404).send("NOT FOUND")
@@ -79,15 +87,22 @@ const ethnicPost = async (req, res) => {
 
 const ethnicPostId = async (req, res) => {
     const parameters = {
-        name: req.body.ethnic,
-        tribe: req.body.tribe,
-        state: req.body.state,
+        ethnic: req.body.ethnic,
+        states: req.body.states,
         country: req.body.country,
         region: req.body.region,
         language: req.body.language,
         image: req.body.image,
         delicacies: req.body.delicacies
     }
+
+    const validateData = validationResult(req);
+
+    if(validateData.errors.length > 0) {
+        res.status(401).send(validateData.errors)
+        return;
+    };
+
     const objId = new objectId(req.params.id)
     const mongoDB = await mongodb;
     const collection =  mongoDB.db("final-project").collection("ethnic-collection");
@@ -110,13 +125,35 @@ const ethnicPutId = async (req, res, next) => {
     // parameters 
     const parameters = {
         ethnic: req.body.ethnic,
-        state: req.body.state,
+        states: req.body.states,
         country: req.body.country,
         region: req.body.region,
         language: req.body.language,
         image: req.body.image,
         delicacies: req.body.delicacies
     }
+
+    const validateData = validationResult(req);
+
+    function errors(){
+        const errorMessages = validateData.errors.map((x) => x.msg);
+        const errorPath = validateData.errors.map((x) => x.path);
+        return errorMessages
+    }
+    
+
+   
+    
+
+    
+
+
+    if(validateData.errors.length > 0) {
+       
+        res.status(401).send(errors())
+        return;
+    };
+
     // extracts _id from the collection
     const objId = new objectId(req.params.id);
     // connects to the database

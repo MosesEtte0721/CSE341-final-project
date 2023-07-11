@@ -26,9 +26,6 @@ const port = process.env.PORT || 6060;
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(require("./documentation/swagger-ethnic.json")));
 app.use(require("./routes/index"));
 
-app.get("/", (req, res)=> {
-    res.send("<h1>Welcome to my home page</h1>")
-});
 
 
 

@@ -1,5 +1,6 @@
 const mongodb = require("../db/mongoDB").mongoDb();
 const objectId = require("mongodb").ObjectId;
+const {validationResult} = require("express-validator");
 
 const delicacies = async (req, res) => {
     const mongoDB = await mongodb;
@@ -45,6 +46,20 @@ const delicacySingle = async (req, res) => {
 };
 
 const delicacyPost = async (req, res) => {
+    const validateData = validationResult(req);
+
+    // maps all the error messages 
+    function errors(){
+        const errorMessages = validateData.errors.map((x) => x.msg);
+        const errorPath = validateData.errors.map((x) => x.path);
+        return errorMessages
+    }
+// returns error messages
+    if(validateData.errors.length > 0) {
+        res.status(401).json(errors());
+        return;
+    };
+
     const parameters = {
         name: req.body.name,
         ethnics: req.body.ethnics,
@@ -72,6 +87,19 @@ const delicacyPost = async (req, res) => {
 };
 
 const delicacyPut = async (req, res) => {
+    const validateData = validationResult(req);
+    // maps all the error messages 
+    function errors(){
+        const errorMessages = validateData.errors.map((x) => x.msg);
+        const errorPath = validateData.errors.map((x) => x.path);
+        return errorMessages
+    }
+// returns error messages
+    if(validateData.errors.length > 0) {
+        res.status(401).json(errors());
+        return;
+    };
+    
     const parameters = {
         name: req.body.name,
         ethnics: req.body.ethnics,
