@@ -1,9 +1,9 @@
 const scheme = {
 
     "name": {
-        notEmpty: {
-            errorMessage: "name of delicacy required"
-        },
+        // notEmpty: {
+        //     errorMessage: "name of delicacy required"
+        // },
         
         isLength: { options: {
             min: 3,
@@ -13,9 +13,9 @@ const scheme = {
 
     "ethnic": {
 
-        notEmpty: {
-            errorMessage: "ethnic is required. Attribute an ethnic to the delicacy"
-        },
+        // notEmpty: {
+        //     errorMessage: "ethnic is required. Attribute an ethnic to the delicacy"
+        // },
 
         isLength: { options: {
             min: 3,
@@ -28,9 +28,9 @@ const scheme = {
    
     "country": {
         
-        notEmpty: {
-            errorMessage: "country is required"
-        },
+        // notEmpty: {
+        //     errorMessage: "country is required"
+        // },
 
         isLength: { options: {
             min: 7,
@@ -40,9 +40,9 @@ const scheme = {
 },
 
     "states": {
-        notEmpty: {
-            errorMessage: "state is required. State of the ethnic "
-        },
+        // notEmpty: {
+        //     errorMessage: "state is required. State of the ethnic "
+        // },
 
         isLength: { options: {
             min: 3, 
@@ -54,7 +54,7 @@ const scheme = {
      
     "region":{
 
-        notEmpty: {errorMessage: "region is required"},
+        // notEmpty: {errorMessage: "region is required"},
         isLength: { options: {
             min: 5, max: 15
         }, errorMessage: "Region must be 4 min or 15 max letters"}
@@ -63,7 +63,7 @@ const scheme = {
 
     "language": {
     
-        notEmpty: {errorMessage: "Language is required"},
+        // notEmpty: {errorMessage: "Language is required"},
 
         isLength: {options: {
             min: 3, max: 20
@@ -73,13 +73,13 @@ const scheme = {
 
     "delicacies": {
         
-        isLength: {options:{min:3, max: 20}, errorMessage: "delicacies must be 3 min or 20 max letters",}, 
+        // isLength: {options:{min:3, max: 20}, errorMessage: "delicacies must be 3 min or 20 max letters",}, 
         notEmpty: {errorMessage: "delicacies is empty"},
         
     },
 
     "image": {
-        notEmpty: {errorMessage: "image is empty"},
+        // notEmpty: {errorMessage: "image is empty"},
         
         isLength: {options:{min:2, max:3}, errorMessage: "image must be (YES / NO)"},
         

@@ -2,7 +2,13 @@
 const mongodb = require("../db/mongoDB").mongoDb();
 const objectId = require("mongodb").ObjectId;
 const { error } = require("console");
-const { validationResult}  = require("express-validator")
+const { validationResult}  = require("express-validator");
+const jwtSign = require("../utility/jwt");
+const dotenv = require("dotenv").config();
+
+
+
+
 // Returns all the documents in the collection
 const ethnics = async (req, res) => {
     const mongoDB = await mongodb;
@@ -48,6 +54,54 @@ const ethnicSingle = async (req, res) => {
    }
 }
 
+// const ethnicPost = async (req, res) => {
+//     const parameters = {
+//         ethnic: req.body.ethnic,
+//         states: req.body.states,
+//         country: req.body.country,
+//         region: req.body.region,
+//         language: req.body.language,
+//         image: req.body.image,
+//         delicacies: req.body.delicacies
+//     };
+    
+//     const validateData = validationResult(req);
+
+//     function errors(){
+//         const errorMessages = validateData.errors.map((x) => x.msg);
+//         const errorPath = validateData.errors.map((x) => x.path);
+//         return errorMessages
+//     }
+
+//     if(validateData.errors.length > 0) {
+//         res.status(401).send(errors())
+//     };
+
+//     const mongoDB = await mongodb;
+//     // res.setHeader("Content-Type", "application/json");
+//     const collection =  mongoDB.db("final-project").collection("ethnic-collection");
+//     try {
+//         collection.insertOne(parameters);
+
+//         res.setHeader("Content-Type", "application/json");
+
+//         if(collection.acknowledged) {
+//             const sign = await jwtSign(parameters, process.env.SECRET_KEY);
+//             res.cookie("jwtkey", sign)
+//              res.status(201);
+//              return;
+//         } 
+//         else {
+//              res.status(404).send("NOT FOUND")
+//              return;
+//         }
+
+//     } catch(error) {
+//          res.status(500).json(error.message)
+//         return
+//     }
+// }
+
 const ethnicPost = async (req, res) => {
     const parameters = {
         ethnic: req.body.ethnic,
@@ -58,62 +112,35 @@ const ethnicPost = async (req, res) => {
         image: req.body.image,
         delicacies: req.body.delicacies
     };
-    
+
     const validateData = validationResult(req);
 
-    if(validateData.errors.length > 0) {
-        res.status(401).send(validateData.errors.message)
+    function errors(){
+        const errorMessages = validateData.errors.map((x) => x.msg);
+        const errorPath = validateData.errors.map((x) => x.path);
+        return errorMessages
     };
 
-    const mongoDB = await mongodb;
-    const collection =  mongoDB.db("final-project").collection("ethnic-collection");
-    try {
-        collection.insertOne(parameters);
-
-        res.setHeader("Content-Type", "application/json");
-
-        if(collection.acknowledged) {
-            res.status(201).send(`Document was inserted`)
-        } 
-        else {
-            res.status(404).send("NOT FOUND")
-        }
-
-    } catch(error) {
-        res.status(500).json(error.message)
-    }
-
-}
-
-const ethnicPostId = async (req, res) => {
-    const parameters = {
-        ethnic: req.body.ethnic,
-        states: req.body.states,
-        country: req.body.country,
-        region: req.body.region,
-        language: req.body.language,
-        image: req.body.image,
-        delicacies: req.body.delicacies
-    }
-
-    const validateData = validationResult(req);
-
     if(validateData.errors.length > 0) {
-        res.status(401).send(validateData.errors)
+        res.status(401).send(errors())
         return;
     };
 
-    const objId = new objectId(req.params.id)
+    // const objId = new objectId(req.params.id)
     const mongoDB = await mongodb;
     const collection =  mongoDB.db("final-project").collection("ethnic-collection");
 
     try {
-        collection.insertOne(objId);
+        collection.insertOne(parameters);
         res.setHeader("Content-Type", "application/json")
-        if(data.acknowledged) {
-            res.status(201).send(`Document was inserted with _id ${data.insertedId}`)
+        if(collection) {
+            const sign = await jwtSign.jwtAuthSign(parameters);
+            res.cookie("jwtkey", sign);
+            res.status(201).send(`Document was inserted`)
+            return;
         } else {
             res.status(404).send("NOT FOUND")
+            return;
         }
 
     } catch(error) {
@@ -142,15 +169,10 @@ const ethnicPutId = async (req, res, next) => {
     }
     
 
-   
-    
-
-    
-
 
     if(validateData.errors.length > 0) {
        
-        res.status(401).send(errors())
+        res.status(401).json({errorMessage: errors()})
         return;
     };
 
@@ -164,7 +186,8 @@ const ethnicPutId = async (req, res, next) => {
         collection.replaceOne({_id: objId}, parameters);
 
         if(collection) {
-           
+            const sign = await jwtSign.jwtAuthSign(parameters, process.env.SECRET_KEY);
+            res.cookie("jwtkey", sign);
             res.status(202).send("Updated! successfully updated the document")
         } else {
             res.status(401).send("<h2>Not allowed</h2>")
@@ -196,7 +219,6 @@ const ethnicDel = async (req, res, next) => {
 module.exports = {
     ethnicDel,
     ethnicPutId,
-    ethnicPostId,
     ethnicPost,
     ethnicSingle,
     ethnics

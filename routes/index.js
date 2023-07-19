@@ -16,6 +16,8 @@ router.get("/", (req, res)=> {
 
 router.use("/", require("./delicacy-rout"))
 router.use("/", require("./ethnic-rout"));
+router.use("/", require("./login-reg"))
+
 
 module.exports = router
 

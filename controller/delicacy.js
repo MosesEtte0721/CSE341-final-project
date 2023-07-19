@@ -1,6 +1,9 @@
 const mongodb = require("../db/mongoDB").mongoDb();
 const objectId = require("mongodb").ObjectId;
 const {validationResult} = require("express-validator");
+const jwtSign = require("../utility/jwt");
+
+
 
 const delicacies = async (req, res) => {
     const mongoDB = await mongodb;
@@ -56,7 +59,7 @@ const delicacyPost = async (req, res) => {
     }
 // returns error messages
     if(validateData.errors.length > 0) {
-        res.status(401).json(errors());
+        res.status(401).json({errorMessage: errors()});
         return;
     };
 
@@ -75,10 +78,12 @@ const delicacyPost = async (req, res) => {
         collection.insertOne(parameters);
 
         if(collection) {
-            res.status(202).send("successful")
+            const sign = await jwtSign.jwtAuthSign(parameters, process.env.SECRET_KEY);
+            res.cookie("jwtkey", sign);
+            res.status(202).send("Created!  New document created")
         } 
         else {
-            res.status(401).send("Failed! Document not created")
+            res.status(401).redirect("/login")
         }
 
     } catch(error) {
@@ -88,15 +93,17 @@ const delicacyPost = async (req, res) => {
 
 const delicacyPut = async (req, res) => {
     const validateData = validationResult(req);
+
     // maps all the error messages 
-    function errors(){
-        const errorMessages = validateData.errors.map((x) => x.msg);
-        const errorPath = validateData.errors.map((x) => x.path);
-        return errorMessages
-    }
+function errors(){
+    const errorMessages = validateData.errors.map((x) => x.msg);
+    const errorPath = validateData.errors.map((x) => x.path);
+    return errorMessages
+}
+    
 // returns error messages
     if(validateData.errors.length > 0) {
-        res.status(401).json(errors());
+        res.status(401).json({errorMessage: errors()});
         return;
     };
     
@@ -115,7 +122,10 @@ const delicacyPut = async (req, res) => {
 
     try {
        collection.replaceOne({ _id: objId}, parameters);
+
        if(collection){
+        const sign = await jwtSign.jwtAuthSign(parameters);
+            res.cookie("jwtkey", sign);
         res.status(200).send("Updated!")
        } else {
         res.status(403).send("Failed! Operation Failed")
@@ -130,7 +140,7 @@ const delicacyPut = async (req, res) => {
 
 const delicacyDel = async (req, res) => {
     const objId = new objectId(req.params.id);
-    console.log(objId)
+   
     const mongoDB = await mongodb;
     const collection = mongoDB.db("final-project").collection("delicacy-collection");
     try {
